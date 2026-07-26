@@ -1,0 +1,29 @@
+import os
+from telegram import Update, WebAppInfo, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
+
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    keyboard = [
+        [InlineKeyboardButton("🚀 افتح التطبيق", web_app=WebAppInfo(url="https://bot-ten-vert-32.vercel.app/"))],
+        [InlineKeyboardButton("📋 قسم المهام", callback_data='tasks')],
+        [InlineKeyboardButton("💰 قسم السحب", callback_data='withdraw')],
+    ]
+    await update.message.reply_text("أهلاً! اختار:", reply_markup=InlineKeyboardMarkup(keyboard))
+
+async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    q = update.callback_query
+    await q.answer()
+    if q.data == 'tasks':
+        await q.edit_message_text("📢 إعلان مونتي تاج\n@MonteTagChannel\n\nالمهمة: اشترك = 1$")
+    elif q.data == 'withdraw':
+        await q.edit_message_text("ابعت ID باينانس:")
+
+def main():
+    TOKEN = os.environ.get("8824986809:AAFU3nZ4VYi5HEggXdpKwOwlE8hlgW5Csx8", "حط_التوكن_بتاعك_هنا")
+    app = Application.builder().token(TOKEN).build()
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(CallbackQueryHandler(button))
+    app.run_polling()
+
+if __name__ == '__main__':
+    main()
